@@ -1,6 +1,7 @@
 <template>
     <div class="main">
-        <h1>Top 50 Video</h1>
+        <loading :active.sync="isLoading"></loading>
+        <h1>Top 50 Popular Video</h1>
         <div class="cards">
             <div class="card" v-for="video in pageListData" :key="video.id">
                 <img :src="video.image" alt="video-picture">
@@ -10,15 +11,19 @@
                 </div>
                 <p class="description">{{video.description}}...</p>
                 <div class="btn">
-                    <button :class="{ test: video.isFavorite }" @click.stop.prevent="editFavorite(video.id)"><i class="fas fa-heart"></i></button>
+                    <button :class="{ favorite: video.isFavorite }" @click.stop.prevent="editFavorite(video.id)"><i class="fas fa-heart fa-lg"></i></button>
                 </div>
             </div>
         </div>
         <Paginate
             :page-count="pageNum"
             :prev-text="'<<'"
+            :prev-class="'page-item'"
             :next-text="'>>'"
+            :next-class="'page-item'"
             :click-handler="pageCallBack"
+            :page-class="'page-item'"
+            :container-class="'pagination'"
         />
     </div>
 </template>
@@ -34,6 +39,7 @@ export default {
             pageSize: 8,
             pageNum: 1,
             currentPage: 1,
+            isLoading: false
         }
     },
     methods: {
@@ -57,6 +63,7 @@ export default {
         },
         async getVideos(){
             const vm = this;
+            vm.isLoading = true;
             await axios.get(`${process.env.VUE_APP_YOUTUBE_URL}?part=snippet&part=contentDetails&key=${process.env.VUE_APP_YOUTUBE_API_KEY}&chart=mostPopular&maxResults=100`)
             .then(res=>{
                 vm.videos = res.data.items.map(item=> ({
@@ -67,6 +74,8 @@ export default {
                     image: item.snippet.thumbnails.medium.url,
                     isFavorite: helpers.isFavorite(item.id)
                 }))
+            }).then(()=>{
+                vm.isLoading = false;
             })
         }
     },
@@ -92,7 +101,28 @@ export default {
 </script>
 
 <style>
-@media screen and (max-width: 376px) {
+.favorite{
+    color: red
+}
+.pagination {
+    display: flex;
+    justify-content:flex-end;
+    padding: 16px 16px;
+    font-size: 18px;
+}
+.pagination .page-item{
+    padding: 8px;
+    border: 1px solid #D7D7D7;
+}
+.pagination .page-item.active{
+    background-color: #D7D7D7;
+    color: white;
+}
+.pagination .page-item a{
+    text-decoration: none;
+    outline: none;
+}
+@media screen and (max-width: 426px) {
     .main{
         padding: 0 8px;
     }
@@ -114,7 +144,7 @@ export default {
     }
     .main .cards .card img{
         border-radius: 8px;
-        opacity: .7;
+        opacity: .8;
     }
     .main .cards .card .duration{
         position: absolute;
@@ -137,10 +167,15 @@ export default {
         font-size: 12px;
     }
     .main .cards .card .btn{
-        text-align: right;
+        position: absolute;
+        top: 24px;
+        right: 16px;
+    }
+    .main .cards .card .btn button{
+        border: none;
+        background-color: transparent;
+        outline: none;
     }
 }
-.test{
-    color: red
-}
+
 </style>

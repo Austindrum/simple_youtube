@@ -1,22 +1,29 @@
 <template>
-    <div>
-        <h1>Favorites</h1>
-        <div style="display: flex;flex-wrap: wrap">
-            <div style="width: 320px" v-for="video in pageListData" :key="video.id">
-                <img :src="video.image" alt="video">
-                <p>{{video.duration}}</p>
-                <div>
-                    <button @click.prevent="editFavorite(video.id)">Remove Favotiate</button>
+    <div class="main">
+        <loading :active.sync="isLoading"></loading>
+        <h1>Your Favorites</h1>
+        <div class="cards">
+            <div class="card" v-for="video in pageListData" :key="video.id">
+                <img :src="video.image" alt="video-picture">
+                <p class="duration">{{video.duration}}</p>
+                <div class="link">
+                    <router-link :to="{name: 'video', params: {id: video.id}}">{{video.title}}</router-link>
                 </div>
-                <router-link :to="{name: 'video', params: {id: video.id}}">{{video.title}}</router-link>
-                <p>{{video.description}}</p>
+                <p class="description">{{video.description}}</p>
+                <div class="btn">
+                    <button class="favorite" @click.prevent="editFavorite(video.id)"><i class="fas fa-heart fa-lg"></i></button>
+                </div>
             </div>
         </div>
         <Paginate
             :page-count="pageNum"
             :prev-text="'<<'"
+            :prev-class="'page-item'"
             :next-text="'>>'"
+            :next-class="'page-item'"
             :click-handler="pageCallBack"
+            :page-class="'page-item'"
+            :container-class="'pagination'"
         />
     </div>
 </template>
@@ -32,6 +39,7 @@ export default {
             pageSize: 8,
             pageNum: 1,
             currentPage: 1,
+            isLoading: false
         }
     },
     methods: {
@@ -55,21 +63,24 @@ export default {
             })
         },
         async getFavorites(){
+            let vm =this;
+            vm.isLoading = true;
             let favorites = JSON.parse(localStorage.getItem("allied_favorites_videos")) || [];
             let temp = ``;
             favorites.forEach(favorite=>{
                 temp += `&id=${favorite}`;
             })
             await axios.get(`${process.env.VUE_APP_YOUTUBE_URL}?part=snippet&part=contentDetails&key=${process.env.VUE_APP_YOUTUBE_API_KEY}${temp}`).then(res=>{
-                let vm =this;
                 vm.videos = res.data.items.map(item=> ({
                     id: item.id,
-                    title: item.snippet.title,
+                    title: item.snippet.title.substring(0, 40),
                     duration: helpers.timeFormat(item.contentDetails.duration),
                     description: item.snippet.description.substring(0, 50),
                     image: item.snippet.thumbnails.medium.url,
                     isFavorite: helpers.isFavorite(item.id)
                 }))
+            }).then(()=>{
+                vm.isLoading = false;
             })
         }
     },
@@ -94,6 +105,6 @@ export default {
 }
 </script>
 
-<style lang="">
+<style>
     
 </style>
