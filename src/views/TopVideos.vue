@@ -122,6 +122,15 @@ export default {
     text-decoration: none;
     outline: none;
 }
+.main .cards .card .link a{
+    cursor: pointer;
+}
+.main .cards .card .link a:hover{
+    text-decoration: underline;
+}
+.main .cards .card .btn button{
+    cursor: pointer;
+}
 @media screen and (max-width: 426px) {
     .main{
         padding: 0 8px;
@@ -177,5 +186,56 @@ export default {
         outline: none;
     }
 }
-
+@media screen and (min-width: 427px) {
+    .main h1{
+        font-size: 30px;
+        text-align: left;
+        padding: 16px 0 16px 24px;
+        font-weight: 700;
+    }
+    .main .cards{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .main .cards .card{
+        width: 320px;
+        margin: 0 auto;
+        padding: 8px;
+        position: relative;
+    }
+    .main .cards .card img{
+        border-radius: 8px;
+        opacity: .8;
+    }
+    .main .cards .card .duration{
+        position: absolute;
+        top: 160px;
+        right: 16px;
+        background-color: black;
+        color: white;
+        padding: 2px;
+        border-radius: 2px;
+    }
+    .main .cards .card .link{
+        margin: 8px 0px;
+    }
+    .main .cards .card .link a{
+        text-decoration: none;
+        color: black;
+        font-weight: 600;
+    }
+    .main .cards .card .description{
+        font-size: 12px;
+    }
+    .main .cards .card .btn{
+        position: absolute;
+        top: 24px;
+        right: 16px;
+    }
+    .main .cards .card .btn button{
+        border: none;
+        background-color: transparent;
+        outline: none;
+    }
+}
 </style>
