@@ -10,7 +10,7 @@
                 </div>
                 <p class="description">{{video.description}}...</p>
                 <div class="btn">
-                    <button :class="{ test: video.isFavorite }" @click.stop.prevent="editFavorite(video.id)">Add Favotiate</button>
+                    <button :class="{ test: video.isFavorite }" @click.stop.prevent="editFavorite(video.id)"><i class="fas fa-heart"></i></button>
                 </div>
             </div>
         </div>
