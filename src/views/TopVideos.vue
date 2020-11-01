@@ -5,6 +5,9 @@
             <div style="width: 320px" v-for="video in pageListData" :key="video.id">
                 <img :src="video.image" alt="video">
                 <p>{{video.duration}}</p>
+                <div>
+                    <button :class="{ test: video.isFavorite }" @click.prevent="editFavorite(video.id)">Add Favotiate</button>
+                </div>
                 <router-link :to="{name: 'video', params: {id: video.id}}">{{video.title}}</router-link>
                 <p>{{video.description}}</p>
             </div>
@@ -25,13 +28,21 @@ import helpers from '../utils/helpers';
 export default {
     data() {
         return {
-            videos: {},
+            videos: [],
             pageSize: 8,
             pageNum: 1,
-            currentPage: 1
+            currentPage: 1,
         }
     },
     methods: {
+        editFavorite(id){
+            helpers.editFavorite(id);
+            this.videos.forEach(video=>{
+                if(video.id === id){
+                    video.isFavorite = !video.isFavorite;
+                }
+            })
+        },
         pageCallBack(num){
             this.currentPage = num;
         },
@@ -51,7 +62,8 @@ export default {
                     title: item.snippet.title,
                     duration: helpers.timeFormat(item.contentDetails.duration),
                     description: item.snippet.description.substring(0, 50),
-                    image: item.snippet.thumbnails.medium.url
+                    image: item.snippet.thumbnails.medium.url,
+                    isFavorite: helpers.isFavorite(item.id)
                 }))
             })
         }
@@ -77,6 +89,8 @@ export default {
 }
 </script>
 
-<style lang="">
-    
+<style>
+.test{
+    color: red
+}
 </style>
