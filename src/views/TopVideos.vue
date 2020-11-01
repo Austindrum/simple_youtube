@@ -1,15 +1,17 @@
 <template>
-    <div>
-        <h1>Top 100 Video</h1>
-        <div style="display: flex;flex-wrap: wrap">
-            <div style="width: 320px" v-for="video in pageListData" :key="video.id">
-                <img :src="video.image" alt="video">
-                <p>{{video.duration}}</p>
-                <div>
-                    <button :class="{ test: video.isFavorite }" @click.prevent="editFavorite(video.id)">Add Favotiate</button>
+    <div class="main">
+        <h1>Top 50 Video</h1>
+        <div class="cards">
+            <div class="card" v-for="video in pageListData" :key="video.id">
+                <img :src="video.image" alt="video-picture">
+                <p class="duration">{{video.duration}}</p>
+                <div class="link">
+                    <router-link :to="{name: 'video', params: {id: video.id}}">{{video.title}}...</router-link>
                 </div>
-                <router-link :to="{name: 'video', params: {id: video.id}}">{{video.title}}</router-link>
-                <p>{{video.description}}</p>
+                <p class="description">{{video.description}}...</p>
+                <div class="btn">
+                    <button :class="{ test: video.isFavorite }" @click.stop.prevent="editFavorite(video.id)">Add Favotiate</button>
+                </div>
             </div>
         </div>
         <Paginate
@@ -59,7 +61,7 @@ export default {
             .then(res=>{
                 vm.videos = res.data.items.map(item=> ({
                     id: item.id,
-                    title: item.snippet.title,
+                    title: item.snippet.title.substring(0, 40),
                     duration: helpers.timeFormat(item.contentDetails.duration),
                     description: item.snippet.description.substring(0, 50),
                     image: item.snippet.thumbnails.medium.url,
@@ -90,6 +92,54 @@ export default {
 </script>
 
 <style>
+@media screen and (max-width: 376px) {
+    .main{
+        padding: 0 8px;
+    }
+    .main h1{
+        font-size: 20px;
+        font-weight: 700;
+        text-align: center;
+        padding: 8px 0px;
+    }
+    .main .cards{
+        display: flex;
+        flex-wrap: wrap
+    }
+    .main .cards .card{
+        width: 320px;
+        margin: 0 auto;
+        padding: 8px;
+        position: relative;
+    }
+    .main .cards .card img{
+        border-radius: 8px;
+        opacity: .7;
+    }
+    .main .cards .card .duration{
+        position: absolute;
+        top: 160px;
+        right: 16px;
+        background-color: black;
+        color: white;
+        padding: 2px;
+        border-radius: 2px;
+    }
+    .main .cards .card .link{
+        margin: 8px 0px;
+    }
+    .main .cards .card .link a{
+        text-decoration: none;
+        color: black;
+        font-weight: 600;
+    }
+    .main .cards .card .description{
+        font-size: 12px;
+    }
+    .main .cards .card .btn{
+        text-align: right;
+    }
+}
 .test{
     color: red
 }
