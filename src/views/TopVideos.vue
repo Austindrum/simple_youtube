@@ -20,7 +20,7 @@
 
 <script>
 import axios from "axios";
-import moment from 'moment';
+import helpers from '../utils/helpers';
 
 export default {
     data() {
@@ -42,21 +42,6 @@ export default {
                 this.$set(video, "num", key + 1);
             })
         },
-        timeFormat(milliseconds){
-            function pad(n, z) {
-                z = z || 2;
-                return ('00' + n).slice(-z);
-            }
-            let duration = moment.duration(milliseconds).asMilliseconds()
-            let ms = duration % 1000;
-            duration = (duration - ms) / 1000;
-            let secs = duration % 60;
-            duration = (duration - secs) / 60;
-            let mins = duration % 60;
-            let hrs = (duration - mins) / 60;
-            
-            return pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
-        },
         async getVideos(){
             const vm = this;
             await axios.get(`${process.env.VUE_APP_YOUTUBE_URL}?part=snippet&part=contentDetails&key=${process.env.VUE_APP_YOUTUBE_API_KEY}&chart=mostPopular&maxResults=100`)
@@ -64,7 +49,7 @@ export default {
                 vm.videos = res.data.items.map(item=> ({
                     id: item.id,
                     title: item.snippet.title,
-                    duration: this.timeFormat(item.contentDetails.duration),
+                    duration: helpers.timeFormat(item.contentDetails.duration),
                     description: item.snippet.description.substring(0, 50),
                     image: item.snippet.thumbnails.medium.url
                 }))
