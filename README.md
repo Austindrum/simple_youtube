@@ -1,24 +1,25 @@
-# allied_project
+# Simle Youtube
+
+### [DEMO](https://protected-island-86680.herokuapp.com/#/)
 
 ## Project setup
 ```
+git clone https://github.com/Austindrum/simple_youtube.git
+
 npm install
-```
 
-### Compiles and hot-reloads for development
-```
 npm run serve
+
 ```
 
-### Compiles and minifies for production
+## you have to set up your .env file
+
 ```
-npm run build
+VUE_APP_YOUTUBE_URL: YOUTUBE API URL
+
+VUE_APP_YOUTUBE_API_KEY: YOUR YOUTUBE API KEY 
+
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## 開發人員
+[Austin Liu](https://github.com/Austindrum)
