@@ -1,4 +1,4 @@
-# Simle Youtube
+# Simple Youtube
 
 ### [DEMO](https://protected-island-86680.herokuapp.com/#/)
 
